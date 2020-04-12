@@ -1,5 +1,6 @@
-cd 'C:\Users\Ethan\Documents\Writings'
-$files = (Get-ChildItem -Path C:\Users\Ethan\Documents\Writings -Filter *.docx -Recurse -ErrorAction SilentlyContinue -Force).FullName
+$topLevelFolder = Read-Host -Prompt 'Enter the top-level folder location you would like to loop over to create .rtf files from .docx files'
+cd $topLevelFolder
+$files = (Get-ChildItem -Path $topLevelFolder -Filter *.docx -Recurse -ErrorAction SilentlyContinue -Force).FullName
 foreach ($file in $files) {
 	$newFile = $file.substring(0, $file.LastIndexOf('.')) + '.rtf'
 	
@@ -11,10 +12,12 @@ foreach ($file in $files) {
 	Invoke-Item $file
 	
 	echo ''
-	$User = Read-Host -Prompt 'Hit enter to continue...'
-	
-	# Move the Word document to backups folder.
-	Move-Item -Path $file -Destination 'C:\Users\Ethan\Documents\Writings\MS Word Backups'
-	
+	$next = Read-Host -Prompt 'Hit enter to continue...'
 }
-cd 'C:\Users\Ethan\Documents\Projects\Batch'
+
+# Create backup location.
+New-Item -ItemType Directory -Force -Path $topLevelFolder + '\MS Word Backups'
+# Move the Word documents to backups folder. (Do this now instead of in above for-loop because user might accidentally hit enter when they didn't mean to.)
+foreach ($file in $files) {
+	Move-Item -Path $file -Destination $topLevelFolder + '\MS Word Backups'
+}
