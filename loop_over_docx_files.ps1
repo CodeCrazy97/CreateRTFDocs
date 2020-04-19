@@ -16,8 +16,10 @@ foreach ($file in $files) {
 }
 
 # Create backup location.
-New-Item -ItemType Directory -Force -Path $topLevelFolder + '\MS Word Backups'
+$backups = $topLevelFolder + '\MS Word Backups'
+New-Item -ItemType Directory -Force -Path $backups
 # Move the Word documents to backups folder. (Do this now instead of in above for-loop because user might accidentally hit enter when they didn't mean to.)
 foreach ($file in $files) {
-	Move-Item -Path $file -Destination $topLevelFolder + '\MS Word Backups'
+	Move-Item -Path $file -Destination $backups
 }
+
